@@ -2,6 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import cors from "cors";
 import { Server as ServerIo } from "socket.io";
+import { socketController } from "../sockets/controller.js";
 
 class Server {
   constructor() {
@@ -14,8 +15,12 @@ class Server {
 
     // Middlewares
     this.middlewares();
+
     // Rutas de mi aplicacion
     this.routes();
+
+    // Sockets
+    this.sockets();
   }
 
   middlewares() {
@@ -30,9 +35,13 @@ class Server {
     // this.app.use(this.paths.auth, routerAuth);
   }
 
+  sockets() {
+    this.io.on("connection", socketController);
+  }
+
   listen() {
     this.server.listen(this.port, () => {
-      console.log(`Server is running on port ${this.port}`);
+      console.log(`Servidor corriendo en puerto ${this.port}`);
     });
   }
 }
